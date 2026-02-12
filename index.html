@@ -56,7 +56,6 @@
         flex-direction: column;
         justify-content: flex-start; 
         align-items: center;
-        /* Default padding for Desktop */
         padding-top: 80px; 
         transition: opacity 1s;
         z-index: 2; 
@@ -64,7 +63,6 @@
     }
 
     h1 {
-        /* Default Desktop Size */
         font-size: 42px;
         margin: 10px;
         text-shadow: 0px 2px 10px rgba(0,0,0,0.6);
@@ -97,7 +95,6 @@
         align-items: center;
         justify-content: center;
         gap: 10px; 
-        /* Prevent text selection on mobile tap */
         -webkit-user-select: none;
         user-select: none;
     }
@@ -124,7 +121,6 @@
         position: relative; 
         padding: 8px 20px; 
         min-width: auto;
-        /* Ensure smooth movement */
         transition: top 0.2s, left 0.2s; 
     }
     
@@ -133,15 +129,13 @@
         width: auto;
     }
 
-    /* --- MOBILE SPECIFIC STYLES (iPhone Fixes) --- */
+    /* --- MOBILE SPECIFIC STYLES --- */
     @media screen and (max-width: 600px) {
         .screen {
-            /* Move content higher up for mobile screens */
             padding-top: 15vh; 
         }
         
         h1 {
-            /* Smaller text so it doesn't wrap awkwardly */
             font-size: 28px; 
             margin-bottom: 5px;
         }
@@ -156,7 +150,6 @@
             margin: 10px;
         }
 
-        /* Adjust button container to fit side-by-side on small screens */
         #main div {
             flex-direction: row; 
             flex-wrap: wrap;
@@ -177,7 +170,7 @@
         flex-direction: column;
         z-index: 20; 
         animation: fadeIn 1s;
-        padding: 20px; /* Prevent edge touching on mobile */
+        padding: 20px;
         box-sizing: border-box;
     }
 
@@ -186,11 +179,11 @@
         color: #ff4d6d;
         padding: 30px;
         border-radius: 20px;
-        font-size: 20px; /* Slightly smaller for safety */
+        font-size: 20px; 
         text-align: center;
         box-shadow: 0px 0px 40px rgba(255, 182, 193, 0.6);
         animation: pop 0.6s ease;
-        max-width: 90%; /* Fit screen width */
+        max-width: 90%; 
         line-height: 1.6;
     }
 
@@ -263,9 +256,9 @@
             See you on the 17th!<br><br>
             With love, Dousting ❤️
             <br><br>
-            <span class="booking-text">To book an appointment send a text message to this:</span>
+            <span class="booking-text">To book an appointment click the phone:</span>
             <br>
-            <a id="phoneIcon" href="sms:1234567890" class="sms-link">📲</a>
+            <a id="phoneIcon" class="sms-link">📲</a>
         </div>
     </div>
 
@@ -293,24 +286,16 @@
         startBtn.onclick = () => {
             intro.style.display = 'none';
             main.style.display = 'flex';
-            
-            // Try to play music
-            if (music) {
-                music.play().catch(err => console.log("Music play blocked:", err));
-            }
-            // Ensure video plays on iPhone (sometimes requires explicit play)
-            if (video) {
-                video.play().catch(err => console.log("Video error:", err));
-            }
+            if (music) music.play().catch(err => console.log("Music blocked:", err));
+            if (video) video.play().catch(err => console.log("Video error:", err));
         };
     }
 
-    // 2. No Button Logic (Touch Improved)
+    // 2. No Button Logic
     const moveNoBtn = () => {
         if (!noBtn) return;
         noBtn.style.position = 'absolute';
         
-        // Calculate safe boundaries
         const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
         const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
         
@@ -322,12 +307,9 @@
     };
 
     if (noBtn) {
-        // Desktop mouse hover
         noBtn.addEventListener('mouseover', moveNoBtn);
-        
-        // Mobile tap (Touchstart is better than click for instant reaction)
         noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Prevents the "click" so it doesn't actually press
+            e.preventDefault(); 
             moveNoBtn();
         });
     }
@@ -353,15 +335,11 @@
         };
     }
 
-    // 5. Phone Icon
+    // 5. Phone Icon (Now just switches popups immediately)
     if (phoneIcon) {
-        phoneIcon.onclick = (e) => {
-            // We want to allow the SMS to open, so we use setTimeout to swap popups
-            // AFTER the click registers
-            setTimeout(() => {
-                popup1.style.display = 'none';
-                popup2.style.display = 'flex';
-            }, 500);
+        phoneIcon.onclick = () => {
+            popup1.style.display = 'none';
+            popup2.style.display = 'flex';
         };
     }
 </script>
