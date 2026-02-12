@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Happy Valentine Amada mia</title>
 
 <style>
@@ -13,6 +13,10 @@
         text-align: center;
         color: white;
         background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        /* Prevent elastic scrolling on iPhone */
+        position: fixed;
+        width: 100%;
+        height: 100%;
     }
 
     /* Video Container */
@@ -29,6 +33,7 @@
     #bg-video {
         width: 100%;
         height: 100%;
+        /* Keep 'contain' so the whole video is visible */
         object-fit: contain; 
     }
 
@@ -49,20 +54,23 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* Align to top */
+        justify-content: flex-start; 
         align-items: center;
+        /* Default padding for Desktop */
         padding-top: 80px; 
         transition: opacity 1s;
-        z-index: 2; /* Increased Z-Index to make sure buttons are clickable */
+        z-index: 2; 
         box-sizing: border-box; 
     }
 
     h1 {
+        /* Default Desktop Size */
         font-size: 42px;
         margin: 10px;
         text-shadow: 0px 2px 10px rgba(0,0,0,0.6);
         font-weight: normal;
         letter-spacing: 1px;
+        padding: 0 10px;
     }
 
     p {
@@ -71,6 +79,7 @@
         text-shadow: 0px 1px 5px rgba(0,0,0,0.8);
         margin-top: 5px;
         line-height: 1.5;
+        padding: 0 20px;
     }
 
     /* Buttons */
@@ -88,6 +97,9 @@
         align-items: center;
         justify-content: center;
         gap: 10px; 
+        /* Prevent text selection on mobile tap */
+        -webkit-user-select: none;
+        user-select: none;
     }
 
     #startBtn {
@@ -112,11 +124,43 @@
         position: relative; 
         padding: 8px 20px; 
         min-width: auto;
+        /* Ensure smooth movement */
+        transition: top 0.2s, left 0.2s; 
     }
     
     #noBtn img {
         height: 30px; 
         width: auto;
+    }
+
+    /* --- MOBILE SPECIFIC STYLES (iPhone Fixes) --- */
+    @media screen and (max-width: 600px) {
+        .screen {
+            /* Move content higher up for mobile screens */
+            padding-top: 15vh; 
+        }
+        
+        h1 {
+            /* Smaller text so it doesn't wrap awkwardly */
+            font-size: 28px; 
+            margin-bottom: 5px;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 24px;
+            margin: 10px;
+        }
+
+        /* Adjust button container to fit side-by-side on small screens */
+        #main div {
+            flex-direction: row; 
+            flex-wrap: wrap;
+        }
     }
 
     /* Popup Styling */
@@ -131,8 +175,10 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        z-index: 20; /* Higher than everything else */
+        z-index: 20; 
         animation: fadeIn 1s;
+        padding: 20px; /* Prevent edge touching on mobile */
+        box-sizing: border-box;
     }
 
     .popup-content {
@@ -140,11 +186,11 @@
         color: #ff4d6d;
         padding: 30px;
         border-radius: 20px;
-        font-size: 22px;
+        font-size: 20px; /* Slightly smaller for safety */
         text-align: center;
         box-shadow: 0px 0px 40px rgba(255, 182, 193, 0.6);
         animation: pop 0.6s ease;
-        max-width: 85%;
+        max-width: 90%; /* Fit screen width */
         line-height: 1.6;
     }
 
@@ -155,13 +201,11 @@
 
     .sms-link {
         text-decoration: none;
-        font-size: 30px; 
+        font-size: 35px; 
         display: block;
         margin-top: 10px;
         cursor: pointer;
-        transition: transform 0.2s;
     }
-    .sms-link:hover { transform: scale(1.2); }
 
     @keyframes pop {
         from { transform: scale(0.5); }
@@ -174,7 +218,7 @@
         color: #ff4d6d;
         animation: fall linear infinite;
         font-size: 24px;
-        z-index: 100; /* Falls on top of everything */
+        z-index: 100; 
     }
 
     @keyframes fall {
@@ -187,7 +231,7 @@
 <body>
 
     <div id="video-container">
-        <video id="bg-video" autoplay loop muted playsinline>
+        <video id="bg-video" autoplay loop muted playsinline webkit-playsinline>
             <source src="isa.mov" type="video/mp4">
             <source src="isa.mov" type="video/quicktime"> 
         </video>
@@ -215,7 +259,7 @@
 
     <div id="popup1" class="popup-overlay">
         <div class="popup-content">
-            I am so lucky to have you in my life hermosa! 💕<br>
+            I am so lucky to have you in my life, hermosa! 💕<br>
             See you on the 17th!<br><br>
             With love, Dousting ❤️
             <br><br>
@@ -233,7 +277,6 @@
     </div>
 
 <script>
-    // Grab all elements safely
     const intro = document.getElementById('intro');
     const main = document.getElementById('main');
     const startBtn = document.getElementById('startBtn');
@@ -245,32 +288,32 @@
     const music = document.getElementById('music');
     const video = document.getElementById('bg-video');
 
-    // 1. Start Button Action
+    // 1. Start Button
     if (startBtn) {
         startBtn.onclick = () => {
             intro.style.display = 'none';
             main.style.display = 'flex';
             
-            // Try to play music/video but don't crash if they fail
+            // Try to play music
             if (music) {
-                music.play().catch(err => console.log("Music error (ignore this):", err));
+                music.play().catch(err => console.log("Music play blocked:", err));
             }
+            // Ensure video plays on iPhone (sometimes requires explicit play)
             if (video) {
-                video.play().catch(err => console.log("Video error (ignore this):", err));
+                video.play().catch(err => console.log("Video error:", err));
             }
         };
     }
 
-    // 2. No Button "Run Away" Logic
+    // 2. No Button Logic (Touch Improved)
     const moveNoBtn = () => {
         if (!noBtn) return;
         noBtn.style.position = 'absolute';
         
-        // Math to keep button inside screen
+        // Calculate safe boundaries
         const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
         const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
         
-        // Ensure x and y are positive numbers
         const x = Math.max(10, Math.random() * maxWidth);
         const y = Math.max(10, Math.random() * maxHeight);
         
@@ -279,14 +322,17 @@
     };
 
     if (noBtn) {
+        // Desktop mouse hover
         noBtn.addEventListener('mouseover', moveNoBtn);
+        
+        // Mobile tap (Touchstart is better than click for instant reaction)
         noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); 
+            e.preventDefault(); // Prevents the "click" so it doesn't actually press
             moveNoBtn();
         });
     }
 
-    // 3. Heart Animation Function
+    // 3. Heart Animation
     function createHearts() {
         setInterval(() => {
             const heart = document.createElement('div');
@@ -299,7 +345,7 @@
         }, 300);
     }
 
-    // 4. Yes Button -> Show First Popup
+    // 4. Yes Button
     if (yesBtn) {
         yesBtn.onclick = () => {
             popup1.style.display = 'flex';
@@ -307,12 +353,15 @@
         };
     }
 
-    // 5. Phone Icon -> Show Final Popup
+    // 5. Phone Icon
     if (phoneIcon) {
-        phoneIcon.onclick = () => {
-            popup1.style.display = 'none'; // Hide first popup
-            popup2.style.display = 'flex'; // Show second popup
-            // We do NOT prevent default here so the SMS app still opens
+        phoneIcon.onclick = (e) => {
+            // We want to allow the SMS to open, so we use setTimeout to swap popups
+            // AFTER the click registers
+            setTimeout(() => {
+                popup1.style.display = 'none';
+                popup2.style.display = 'flex';
+            }, 500);
         };
     }
 </script>
